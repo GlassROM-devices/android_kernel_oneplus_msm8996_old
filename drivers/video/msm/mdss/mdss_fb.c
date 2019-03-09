@@ -3456,9 +3456,6 @@ int mdss_fb_atomic_commit(struct fb_info *info,
 	if (wait_for_finish)
 		ret = mdss_fb_pan_idle(mfd);
 
-end:
-	if (update && ret && (mfd->panel.type == WRITEBACK_PANEL) && wb_change)
-		mdss_fb_update_resolution(mfd, old_xres, old_yres, old_format);
 	return ret;
 }
 
