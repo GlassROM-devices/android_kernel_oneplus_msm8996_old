@@ -1033,7 +1033,7 @@ ifeq ($(CONFIG_REMOVE_PKT_LOG), 0)
 OBJS +=		$(PKTLOG_OBJS)
 endif
 
-EXTRA_CFLAGS += $(INCS)
+EXTRA_CFLAGS += $(INCS) -Os
 
 CDEFINES :=	-DANI_LITTLE_BYTE_ENDIAN \
 		-DANI_LITTLE_BIT_ENDIAN \
@@ -1046,6 +1046,9 @@ CDEFINES :=	-DANI_LITTLE_BYTE_ENDIAN \
 		-DPTT_SOCK_SVC_ENABLE \
 		-Wall\
 		-Werror\
+		-Wno-unused-function \
+		-Wno-unused-variable \
+		-Wno-maybe-uninitialized \
 		-D__linux__ \
 		-DHAL_SELF_STA_PER_BSS=1 \
 		-DWLAN_FEATURE_VOWIFI_11R \
@@ -1807,14 +1810,6 @@ CDEFINES += -DFEATURE_DYNAMIC_POWER_CONTROL
 endif
 
 KBUILD_CPPFLAGS += $(CDEFINES)
-
-# Currently, for versions of gcc which support it, the kernel Makefile
-# is disabling the maybe-uninitialized warning.  Re-enable it for the
-# WLAN driver.  Note that we must use EXTRA_CFLAGS here so that it
-# will override the kernel settings.
-ifeq ($(call cc-option-yn, -Wmaybe-uninitialized),y)
-EXTRA_CFLAGS += -Wmaybe-uninitialized
-endif
 
 ifeq ($(call cc-option-yn, -Wheader-guard),y)
 EXTRA_CFLAGS += -Wheader-guard
