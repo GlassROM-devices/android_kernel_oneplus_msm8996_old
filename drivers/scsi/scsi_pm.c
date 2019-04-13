@@ -257,14 +257,12 @@ static int sdev_runtime_suspend(struct device *dev)
 					round_jiffies_up_relative(HZ/10)));
 		return err;
 	}
-
-	if (pm && pm->runtime_suspend) {
-		err = blk_pre_runtime_suspend(sdev->request_queue);
-		if (err)
-			return err;
+	err = blk_pre_runtime_suspend(sdev->request_queue);
+	if (err)
+		return err;
+	if (pm && pm->runtime_suspend)
 		err = pm->runtime_suspend(dev);
 		blk_post_runtime_suspend(sdev->request_queue, err);
-	}
 	return err;
 }
 
@@ -290,11 +288,10 @@ static int sdev_runtime_resume(struct device *dev)
 	if (!sdev->request_queue->dev)
 		return scsi_dev_type_resume(dev, do_scsi_runtime_resume);
 
-	if (pm && pm->runtime_resume) {
-		blk_pre_runtime_resume(sdev->request_queue);
+	blk_pre_runtime_resume(sdev->request_queue);
+	if (pm && pm->runtime_resume)
 		err = pm->runtime_resume(dev);
 		blk_post_runtime_resume(sdev->request_queue, err);
-	}
 	return err;
 }
 
