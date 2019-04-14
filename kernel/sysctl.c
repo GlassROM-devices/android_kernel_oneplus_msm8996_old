@@ -97,7 +97,7 @@
 
 /* External variables not in a header file. */
 #ifdef CONFIG_USB
-int deny_new_usb __read_mostly = 1;
+int deny_new_usb __read_mostly = 0;
 EXPORT_SYMBOL(deny_new_usb);
 #endif
 extern int max_threads;
