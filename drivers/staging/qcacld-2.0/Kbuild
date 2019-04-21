@@ -1033,7 +1033,14 @@ ifeq ($(CONFIG_REMOVE_PKT_LOG), 0)
 OBJS +=		$(PKTLOG_OBJS)
 endif
 
+ifneq ($(cc-name),clang)
 EXTRA_CFLAGS += $(INCS) -Os
+endif
+
+ifeq ($(cc-name),clang)
+EXTRA_CFLAGS += $(INCS) -Oz
+endif
+
 
 CDEFINES :=	-DANI_LITTLE_BYTE_ENDIAN \
 		-DANI_LITTLE_BIT_ENDIAN \
