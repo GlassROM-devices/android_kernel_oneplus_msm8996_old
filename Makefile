@@ -386,6 +386,8 @@ KBUILD_CFLAGS   := -Werror -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -fno-strict-aliasing -fno-common \
 		   -Werror-implicit-function-declaration \
 		   -Wno-format-security \
+		   -Wno-array-bounds -Wno-address-of-packed-member -Wno-parentheses -Wno-bool-compare -Wno-memset-elt-size -Wno-bool-operation -Wno-maybe-uninitialized -Wno-stringop-overflow \
+		   -fno-store-merging \
 		   -std=gnu89
 
 KBUILD_AFLAGS_KERNEL :=
@@ -688,10 +690,10 @@ ifdef CONFIG_CC_STACKPROTECTOR_REGULAR
   endif
 else
 ifdef CONFIG_CC_STACKPROTECTOR_STRONG
-  stackp-flag := -fstack-protector-strong
+  stackp-flag := -fstack-protector-all
   ifeq ($(call cc-option, $(stackp-flag)),)
     $(warning Cannot use CONFIG_CC_STACKPROTECTOR_STRONG: \
-	      -fstack-protector-strong not supported by compiler)
+	      -fstack-protector-all not supported by compiler)
   endif
 else
   # Force off for distro compilers that enable stack protector by default.
