@@ -349,7 +349,7 @@ static void __f2fs_submit_read_bio(struct f2fs_sb_info *sbi,
 
 			path = android_fstrace_get_pathname(pathbuf,
 					MAX_TRACE_PATHBUF_LEN,
-					first_page->mapping->host)
+					first_page->mapping->host);
 
 				trace_android_fs_dataread_start(
 						first_page->mapping->host,
