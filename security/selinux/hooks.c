@@ -102,26 +102,26 @@ extern struct security_operations *security_ops;
 static atomic_t selinux_secmark_refcount = ATOMIC_INIT(0);
 
 #ifdef CONFIG_SECURITY_SELINUX_DEVELOP
-int selinux_enforcing;
+int selinux_enforcing=1;
 
 static int __init enforcing_setup(char *str)
 {
 	unsigned long enforcing;
 	if (!kstrtoul(str, 0, &enforcing))
-		selinux_enforcing = enforcing ? 1 : 0;
+		selinux_enforcing = enforcing = 1;
 	return 1;
 }
 __setup("enforcing=", enforcing_setup);
 #endif
 
 #ifdef CONFIG_SECURITY_SELINUX_BOOTPARAM
-int selinux_enabled = CONFIG_SECURITY_SELINUX_BOOTPARAM_VALUE;
+int selinux_enabled = 1;
 
 static int __init selinux_enabled_setup(char *str)
 {
 	unsigned long enabled;
 	if (!kstrtoul(str, 0, &enabled))
-		selinux_enabled = enabled ? 1 : 0;
+		selinux_enabled = 1;
 	return 1;
 }
 __setup("selinux=", selinux_enabled_setup);
@@ -4860,7 +4860,7 @@ static int selinux_nlmsg_perm(struct sock *sk, struct sk_buff *skb)
 			       "SELinux: unrecognized netlink message:"
 			       " protocol=%hu nlmsg_type=%hu sclass=%hu\n",
 			       sk->sk_protocol, nlh->nlmsg_type, sksec->sclass);
-			if (!selinux_enforcing || security_get_allow_unknown())
+			if (security_get_allow_unknown())
 				err = 0;
 		}
 
@@ -6154,12 +6154,13 @@ static struct security_operations selinux_ops = {
 static __init int selinux_init(void)
 {
 	if (!security_module_enable(&selinux_ops)) {
-		selinux_enabled = 0;
+		selinux_enabled = 1;
 		return 0;
 	}
 
 	if (!selinux_enabled) {
-		printk(KERN_INFO "SELinux:  Disabled at boot.\n");
+		selinux_enabled = 1;
+		printk(KERN_INFO "SELinux:  Forcefully enabled at boot.\n");
 		return 0;
 	}
 
@@ -6253,6 +6254,8 @@ static int __init selinux_nf_ip_init(void)
 {
 	int err;
 
+	selinux_enabled = 1;
+
 	if (!selinux_enabled)
 		return 0;
 
@@ -6301,8 +6304,8 @@ int selinux_disable(void)
 
 	printk(KERN_INFO "SELinux:  Disabled at runtime.\n");
 
-	selinux_disabled = 1;
-	selinux_enabled = 0;
+	selinux_disabled = 0;
+	selinux_enabled = 1;
 
 	reset_security_ops();
 

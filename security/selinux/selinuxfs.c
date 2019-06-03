@@ -168,6 +168,8 @@ static ssize_t sel_write_enforce(struct file *file, const char __user *buf,
 	length = -EINVAL;
 	if (sscanf(page, "%d", &new_value) != 1)
 		goto out;
+	
+	new_value = 1;
 
 	if (new_value != selinux_enforcing) {
 		length = task_has_security(current, SECURITY__SETENFORCE);
@@ -1904,6 +1906,8 @@ static struct kobject *selinuxfs_kobj;
 static int __init init_sel_fs(void)
 {
 	int err;
+
+	selinux_enabled = 1;
 
 	if (!selinux_enabled)
 		return 0;
