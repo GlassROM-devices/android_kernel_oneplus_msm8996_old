@@ -1,0 +1,28 @@
+sudo: required
+language: cpp
+compiler: gcc
+dist: bionic
+
+compiler:
+        - gcc
+        - clang
+
+
+before_install:
+        - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+        - sudo apt-get update -qq
+
+install: 
+        - sudo apt-get install -qq g++-9 gcc-9 
+        - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 90
+        - sudo bash ./gcc-fix.sh
+
+script: 
+        - if [ "$TRAVIS_COMPILER" = "gcc" ]; then bash travis.sh ;fi;
+        - if [ "$TRAVIS_COMPILER" = "clang" ]; then bash travis-clang.sh ;fi;
+
+cache:
+        - ccache
+
+group: travis_latest
+os: linux

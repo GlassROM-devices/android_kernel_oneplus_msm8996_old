@@ -1,0 +1,22 @@
+diff --git a/Makefile b/Makefile
+index 34425cbb3eac..4b36f5ffb64d 100644
+--- a/Makefile
++++ b/Makefile
+@@ -386,8 +386,6 @@ KBUILD_CFLAGS   := -Werror -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
+ 		   -fno-strict-aliasing -fno-common \
+ 		   -Werror-implicit-function-declaration \
+ 		   -Wno-format-security \
+-		   -Wno-array-bounds -Wno-address-of-packed-member -Wno-parentheses -Wno-bool-compare -Wno-memset-elt-size -Wno-bool-operation -Wno-maybe-uninitialized -Wno-stringop-overflow \
+-		   -fno-store-merging \
+ 		   -std=gnu89
+ 
+ KBUILD_AFLAGS_KERNEL :=
+@@ -690,7 +688,7 @@ ifdef CONFIG_CC_STACKPROTECTOR_REGULAR
+   endif
+ else
+ ifdef CONFIG_CC_STACKPROTECTOR_STRONG
+-  stackp-flag := -fstack-protector-all
++  stackp-flag := -fstack-protector-strong
+   ifeq ($(call cc-option, $(stackp-flag)),)
+     $(warning Cannot use CONFIG_CC_STACKPROTECTOR_STRONG: \
+ 	      -fstack-protector-all not supported by compiler)

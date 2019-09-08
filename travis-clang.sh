@@ -1,0 +1,24 @@
+#!/bin/bash
+set -ex;
+printf "running clang tests\n";
+git clone https://bitbucket.org/anupritaisno1/aarch64-linux-gnu -b linaro --single-branch --depth=1 -4 aarch64-linux-gnu -j"$(nproc --all)";
+export CROSS_COMPILE="/usr/bin/ccache $(pwd)/aarch64-linux-gnu/bin/aarch64-linux-gnu-";
+export ARCH=arm64;
+export SUBARCH=arm64;
+export KBUILD_BUILD_USER="Suzumiya";
+export KBUILD_BUILD_HOST="The_literary_club";
+export STRIP="$(pwd)/aarch64-linux-gnu/bin/aarch64-linux-gnu-strip";
+export CCOMPILE=$CROSS_COMPILE;
+export CROSS_COMPILE="/usr/bin/ccache aarch64-linux-gnu-";
+export PATH=$PATH:$(pwd)/aarch64-linux-gnu/bin/;
+mkdir out;
+git clone https://github.com/GlassROM/platform_prebuilts_clang_host_linux-x86 -b pie --single-branch --depth=1 -4 clang -j"$(nproc --all)";
+export clangver="clang-r353983e";
+export PATH=$(pwd)/clang/"$clangver"/bin:$PATH;
+export CC=clang;
+export CLANG_TRIPLE="aarch64-linux-gnu-";
+export CROSS_COMPILE="aarch64-linux-gnu-";
+patch -p1 < clangbuild.patch;
+make O=out ARCH=arm64 lineageos_oneplus3_defconfig;
+make O=out ARCH=arm64 headers_install;
+make O=out ARCH=arm64 CC=clang CLANG_TRIPLE=aarch64-linux-gnu- CROSS_COMPILE=aarch64-linux-gnu- -j"$(nproc --all)";
