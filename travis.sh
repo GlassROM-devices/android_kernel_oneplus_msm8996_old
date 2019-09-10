@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex;
+set -exv;
 printf "running gcc tests\n":
 git clone https://bitbucket.org/anupritaisno1/aarch64-linux-gnu -b linaro --single-branch --depth=1 -4 aarch64-linux-gnu -j"$(nproc --all)";
 export CROSS_COMPILE="/usr/bin/ccache $(pwd)/aarch64-linux-gnu/bin/aarch64-linux-gnu-";
