@@ -18,6 +18,7 @@ install:
         - sudo bash ./gcc-fix.sh
 
 script: 
+        - bash defconfig-sanity-tests.bash
         - if [ "$TRAVIS_COMPILER" = "gcc" ]; then bash travis.sh ;fi;
         - if [ "$TRAVIS_COMPILER" = "clang" ]; then bash travis-clang.sh ;fi;
 
